@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | CarePoint Clinic</title>
+
+  <!-- Font Awesome for Eye Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #2e3c4b, #470747);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 30px;
+    }
+
+    .signup-container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 35px 30px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.6s ease-out;
+      color: white;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      text-align: center;
+      text-decoration: underline;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 500;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      color: #000;
+      margin-bottom: 10px;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper input {
+      padding-right: 40px;
+    }
+
+    .toggle-eye {
+      position: absolute;
+      top: 60%;
+      right: 12px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #444;
+    }
+
+    .back-cross {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      z-index: 10;
+      transition: 0.3s ease;
+    }
+
+    .back-cross:hover {
+      color: #ffaaaa;
+    }
+
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(to right, #2e3c4b85, #47074788);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #2e3c4bb4, #470747b9);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+      transform: translateY(-1px);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .role-info {
+      font-size: 0.95rem;
+      text-align: center;
+      margin-bottom: 15px;
+      color: #ddd;
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      color: lightgreen;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="signup-container">
+    <h2 id="form-title">Sign Up</h2>
+    <span class="back-cross" onclick="window.location.href='index.html'">&times;</span>
+
+    <p class="role-info" id="role-info"></p>
+
+    <form id="signup-form">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" required />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" required />
+
+      <label for="mobile">Mobile Number</label>
+      <input type="tel" id="mobile" pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number" required />
+
+
+      <!-- THIS IS THE NEW ROLE SELECT DROPDOWN -->
+      <label for="role">Select Role</label>
+      <select id="role" required>
+        <option value="">Select role</option>
+        <option value="doctor">Doctor</option>
+        <option value="receptionist">Receptionist</option>
+      </select>
+
+      <div class="password-wrapper">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" required />
+        <i class="fa-solid fa-eye-slash toggle-eye" id="togglePassword"></i>
+      </div>
+
+      <!-- Extra field only for doctor -->
+      <div id="doctor-extra" style="display: none;">
+        <label for="specialization">Specialization</label>
+        <input type="text" id="specialization" placeholder="e.g. Cardiology" />
+      </div>
+
+      <button type="submit">Create Account</button>
+    </form>
+
+    <p id="message"></p>
+  </div>
+
+  <!-- ✅ External JS module -->
+<script type="module" src="firebase-config.js"></script>
+<script type="module" src="signup.js"></script>
+
+</body>
+
+</html>

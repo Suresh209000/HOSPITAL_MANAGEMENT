@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #2e3c4b, #470747);
+      color: white;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(120px);
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar h2 {
+      font-size: 2.5rem;
+      color: rgba(247, 225, 251, 0.595);
+      text-shadow: 2px 2px black;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 70px;
+    }
+
+    .nav-buttons button {
+      padding: 10px 16px;
+      background: transparent;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .nav-buttons button:hover {
+      background: #47074725;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+      transform: translateY(-0.4px);
+    }
+
+    .dashboard {
+      display: flex;
+      height: calc(100vh - 100px);
+    }
+
+    .left-section {
+      width: 35%;
+      padding: 25px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border-right: 2px solid rgba(255, 255, 255, 0.1);
+      overflow-y: auto;
+      
+    }
+
+    .right-section {
+      width: 65%;
+      padding: 25px;
+      overflow-y: auto;
+    }
+
+    .patient-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .patient-card h4 {
+      font-size: 1.2rem;
+      margin-bottom: 2px;
+    }
+
+    .patient-card button {
+      padding: 8px 12px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .checkup-btn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .done-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .prescription-form {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .prescription-form h3 {
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+    }
+
+    .prescription-form input,
+    .prescription-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1rem;
+    }
+
+    .prescription-form button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      background-color: black;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(5px);
+      background-color: rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 30px 40px;
+      border-radius: 12px;
+      text-align: center;
+      color: #fff;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .modal-actions button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      background: black;
+      color: #fff;
+    }
+    #patientList{
+      margin-top: 20px;
+      padding: -10px;
+    }
+
+    .modal-actions button:hover {
+      background: linear-gradient(to right, #2e3c4bb4, #470747b9);
+      transform: translateY(-1px);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+
+.prescription-paper {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 40px;
+  background-color: #ffffff;
+  border: 2px solid #000;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  font-family: 'Georgia', serif;
+  color: #000;
+}
+
+.prescription-paper .header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.prescription-paper .header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.prescription-paper .header p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.prescription-paper .patient-info {
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.prescription-fields {
+  margin-top: 20px;
+}
+
+.prescription-fields label {
+  font-weight: bold;
+  margin-top: 15px;
+  display: block;
+}
+
+
+.line {
+  border-bottom: 1px solid #000;
+  display: inline-block;
+  min-width: 150px;
+  padding: 2px 10px;
+}
+
+.buttonsform {
+  background: transparent !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 120px;
+  padding: 20px 0;
+  box-shadow: none;
+  border: none;
+  
+}
+
+.save-btn,
+#printBtn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  height: 45px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #e8ebe9;
+}
+
+.save-btn:hover {
+  background-color: #bbbebc; /* Darker green */
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+#printBtn:hover {
+  background-color: #bbbebc; /* Darker green */
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+.line-box {
+  min-height: 80px;
+  border-bottom: 1px solid #000;
+  margin-bottom: 20px;
+  padding: 10px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  outline: none;
+}
+
+.line-box.tall {
+  min-height: 120px;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-content {
+    background: linear-gradient(to right, #2e3c4b, #470747);
+
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: white;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+}
+
+.modal-content h3 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #fefefe;
+}
+
+.modal-content p {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  line-height: 1.6;
+  color: #fefefe;
+}
+
+.about-help-container {
+  position: relative;
+  padding-top: 50px;
+}
+
+.back-btn {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  font-size: 1rem;
+  padding: 6px 12px;
+  background: linear-gradient(to right, #2e3c4b, #470747);
+  
+  border: 1.5px solid white;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+  z-index: 10;
+}
+
+.back-btn:hover {
+  background: white;
+  color: #470747;
+}
+.hidden {
+  display: none;
+}
+
+
+  /* ... aapka existing CSS ... */
+
+  /* ⬇️ Paste this at the bottom */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #6a0572, #ab0d9d);
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #8e0e8e, #cc13b7);
+  }
+
+  /* For Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #aaf4e729 rgba(0, 0, 0, 0.05);
+  }
+
+  </style>
+</head>
+<body>
+<!-- 👇 Place inside your <body> -->
+
+<div class="navbar">
+  <h2>Doctor Dashboard</h2>
+  <div class="nav-buttons">
+    <button onclick="loadHome()">Home</button>
+    <button onclick="loadAbout()">About</button>
+    <button onclick="loadHelp()">Help</button>
+    <button onclick="confirmLogout()">Logout</button>
+  </div>
+</div>
+
+<!-- 🩺 Content Area -->
+<div id="dynamicContent"></div>
+
+<!-- 🚪 Logout Confirmation Modal -->
+<div id="logout-confirm" class="modal hidden">
+  <div class="modal-content">
+    <p>Are you sure you want to logout?</p>
+    <div class="modal-actions">
+      <button onclick="handleLogout()">Yes</button>
+      <button onclick="closeLogoutConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+  <div class="dashboard">
+    <!-- Left Section: Patient List -->
+    <div class="left-section" id="patientListSection">
+      <h2>Today's Patients</h2>
+      <div id="patientList"></div>
+    </div>
+
+    <!-- Right Section: Prescription -->
+    <div class="right-section" id="prescriptionSection">
+
+      <!-- ✅ Fixed: Prescription Form -->
+      <div class="prescription-paper" id="prescriptionPaper">
+        <div class="header">
+          <h1>CarePoint Clinic</h1>
+          <p><strong id="doctorName">Dr. ________</strong> | Contact: <span id="doctorContact"></span></p>
+          <hr />
+        </div>
+
+        <div class="patient-info">
+          <p><strong>Patient Name:</strong> <span id="pName" class="line"></span></p>
+          <p><strong>Contact:</strong> <span id="pContact" class="line"></span></p>
+          <p><strong>Age:</strong> <span id="pAge" class="line"></span></p>
+          <p><strong>Gender:</strong> <span id="pGender" class="line"></span></p>
+        </div>
+
+        <hr />
+
+        <div class="prescription-fields">
+          <label>Symptoms:</label>
+          <div class="line-box" id="symptomsField" contenteditable="true"></div>
+
+          <label>Diagnosis:</label>
+          <div class="line-box" id="diagnosisField" contenteditable="true"></div>
+
+          <label>Treatment:</label>
+          <div class="line-box tall" id="treatmentField" contenteditable="true"></div>
+        </div>
+<div class="buttonsform">
+  
+  <button class="save-btn" onclick="savePrescription()">Save Prescription</button>
+  <button id="printBtn" onclick="printPrescription()">Print</button>
+
+  
+</div>
+
+
+      </div>
+
+      <!-- ✅ Floating Card Area for Home / About / Help -->
+      <div id="dynamicContent"></div>
+    </div>
+  </div>
+
+  <!-- ✅ Logout Confirmation Popup -->
+  <div id="logout-confirm" class="modal hidden">
+    <div class="modal-content">
+      <p>Are you sure you want to logout?</p>
+      <div class="modal-actions">
+        <button onclick="handleLogout()">Yes</button>
+        <button onclick="closeLogoutConfirm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Firebase Logout Handler -->
+  <script type="module">
+    import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { auth } from "./firebase-config.js";
+
+    window.handleLogout = function () {
+      signOut(auth)
+        .then(() => {
+          localStorage.clear();
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          console.error("Logout error:", error);
+          alert("❌ Logout failed. Try again.");
+        });
+    };
+  </script>
+
+  <!-- ✅ Main JS -->
+   <script type="module" src="doctor.js" defer></script>
+  <script>
+  function printPrescription() {
+    const section = document.getElementById("prescriptionPaper");
+    if (!section) {
+      alert("❌ Prescription form not found!");
+      return;
+    }
+
+    const printWindow = window.open("", "", "width=800,height=800");
+    printWindow.document.write("<html><head><title>Print Prescription</title></head><body>");
+    printWindow.document.write(section.innerHTML);
+    printWindow.document.write("</body></html>");
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  }
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prescription History | CarePoint Clinic</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #2e3c4b, #470747);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      padding: 6px 12px;
+      background: transparent;
+      border: 1.5px solid white;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s ease;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: white;
+      color: #470747;
+    }
+
+    .entry {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.4);
+    }
+
+    .entry p {
+      margin: 6px 0;
+    }
+  </style>
+</head>
+<body>
+  <a href="receptionist-dashboard.html" class="back-btn">⬅ Back to Dashboard</a>
+  <h2>Prescription History</h2>
+
+  <div id="history-container">
+    <p>Loading prescription history...</p>
+  </div>
+
+  <script type="module">
+    import { db } from "./firebase-config.js";
+    import {
+      collection,
+      getDocs,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const container = document.getElementById("history-container");
+
+    async function loadPrescriptions() {
+      try {
+        const q = query(
+          collection(db, "prescriptions"),
+          orderBy("date", "desc")
+        );
+
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          container.innerHTML = "<p>No prescriptions found.</p>";
+          return;
+        }
+
+        container.innerHTML = "";
+
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const formattedDate = data.date?.toDate().toLocaleString("en-IN") || "Unknown";
+
+          const entry = document.createElement("div");
+          entry.className = "entry";
+          entry.innerHTML = `
+            <p><strong>Name:</strong> ${data.name}</p>
+            <p><strong>Contact:</strong> ${data.contact}</p>
+            <p><strong>Date:</strong> ${formattedDate}</p>
+            <p><strong>Symptoms:</strong> ${data.symptoms}</p>
+            <p><strong>Diagnosis:</strong> ${data.diagnosis}</p>
+            <p><strong>Treatment:</strong> ${data.treatment}</p>
+          `;
+
+          container.appendChild(entry);
+        });
+
+      } catch (err) {
+        console.error("Error loading prescription history:", err);
+        container.innerHTML = "<p>❌ Failed to load history.</p>";
+      }
+    }
+
+    loadPrescriptions();
+  </script>
+</body>
+</html>

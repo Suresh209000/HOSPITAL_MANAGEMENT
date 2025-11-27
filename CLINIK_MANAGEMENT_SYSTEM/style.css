@@ -1,0 +1,406 @@
+/* Reset and Base Styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: linear-gradient(to right, #2e3c4b, #470747);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+html {
+  font-display: swap;
+}
+
+/* ===== BACKGROUND IMAGES HALF-HALF ===== */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  width: 50vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.02; /* adjust opacity */
+  z-index: -1;  /* so content appears above */
+}
+
+body::before {
+  left: 0;
+  background-image: url('assets/Nursing Photos - Download Free High-Quality Pictures _ Freepik.jpeg');
+}
+
+body::after {
+  right: 0;
+  background-image: url('assets/Hospital building exterior modern clinic view.jpeg');
+}
+
+
+
+/* Header */
+.top-header {
+  text-align: center;
+  padding: 40px 20px 10px;
+  animation: fadeInDown 1s ease-out;
+}
+
+.logo {
+  font-size: 3.4rem;
+  font-weight: bold;
+  color: #e7e8ea;
+}
+
+.tagline {
+  font-size: 1.1rem;
+  color: #e7e8ea;
+  margin-top: 8px;
+}
+/* Top-right buttons container */
+.top-buttons {
+  position: absolute;
+  top: 8vh;
+  right: 30px;
+  display: flex;
+  gap: 3vw;
+}
+
+/* About & Sign Up Main Buttons */
+#about-btn,
+.signup-btn {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: white;
+  text-decoration: none;
+  border: 1px solid rgba(250, 249, 249, 0.053);
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+#about-btn:hover,
+.signup-btn:hover {
+  background-color: #3a033a;
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(28, 1, 27, 0.5);
+}
+
+/* Signup Dropdown container */
+.signup-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown menu */
+.dropdown-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #520952be;
+  border: 1px solid #cccccc60;
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Show dropdown on hover */
+.signup-dropdown:hover .dropdown-options {
+  display: block;
+}
+
+/* Dropdown links */
+.dropdown-options a {
+  display: block;
+  padding: 12px;
+  color: #cecfd2;
+  text-decoration: none;
+  border-bottom: 1px solid #eeeeee6a;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+/* Dropdown hover style */
+.dropdown-options a:hover {
+  background-color: #3e063e;
+  transform: translateX(3px);
+  border-radius: 3px;
+}
+
+/* Fade In Animation for dropdown */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* About Modal Styling */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: #ecdada;
+  margin: 1% auto;
+  padding: 30px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 500px;
+  position: relative;
+  animation: fadeIn 0.5s;
+}
+
+#close-modal {
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #040404;
+  cursor: pointer;
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+  color: #000000;
+}
+
+.modal-content ul {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.modal-content li {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Welcome */
+.main-content {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.welcome-text {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #b6b7ce;
+  animation: bounceIn 1.5s ease;
+}
+
+.sub-text {
+  font-size: 1.1rem;
+  color: #b6b7ce;
+  margin: 10px 0 30px;
+  text-decoration: underline;
+  animation: fadeInSmooth 0.8s ease-out;
+  will-change: opacity, transform;
+}
+
+/* When "Please select your role" is hovered, apply styles to both boxes */
+.sub-text:hover {
+  cursor: pointer;
+}
+
+/* Apply hover styles to both role boxes when text is hovered */
+.sub-text:hover + .role-card .role-box {
+  background: rgba(136, 135, 135, 0.579);
+  box-shadow: 0 4px 12px rgba(57, 56, 56, 0.9);
+  transform: translateY(-1px);
+}
+
+/* Smooth transition */
+.role-box {
+  transition: all 0.3s ease;
+  cursor: pointer; /* Always show pointer when hovering on box */
+}
+
+
+/* Role Selection Card */
+.role-card {
+  display: flex;
+  justify-content: center;
+  gap: 6vw;
+  flex-wrap: wrap;
+}
+
+.role-box {
+  background: rgba(255, 255, 255, 0.079);
+  backdrop-filter: blur(10px);
+  border: 2px solid #c0b8c325;
+  border-radius: 15px;
+  width: 240px;
+  padding: 30px 20px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff9f9;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  margin-top: 7vh;
+  animation: fadeInSmooth 0.8s ease-out;
+  will-change: opacity, transform;
+}
+
+.role-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+}
+
+.role-box h2 {
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+  text-decoration: underline;
+}
+
+.role-box p {
+  font-size: 0.95rem;
+  color: #000000;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(to right, #2e3c4b, #470747);
+  color: #f2f2f4;
+  font-size: 0.9rem;
+  margin-top: auto;
+}
+
+
+/* 👇 Fades in + Slides Down Smoothly  */
+@keyframes fadeInDown  {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 👇 Bounces In Smoothly  */
+@keyframes bounceIn  {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes fadeInSmooth {
+  0% {
+    opacity: 0.001; /* never use 0, 0.001 is trick */
+    transform: translateY(0); /* no shift */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* RESPONSIVE */
+@media screen and (max-width: 600px) {
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  * {
+    box-sizing: border-box !important;
+  }
+
+  .logo {
+    font-size: 1.8rem;
+  }
+
+  .role-card {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 10px;
+  }
+
+  .role-box {
+    width: 90%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .top-buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    margin: 30px auto 10px;
+    position: static;
+    flex-wrap: wrap;
+    max-width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  .top-buttons button,
+  .top-buttons .signup-btn,
+  #about-btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.449);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .top-buttons button:hover,
+  .top-buttons .signup-btn:hover,
+  #about-btn:hover {
+    background-color: #3a033a;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(28, 1, 27, 0.5);
+  }
+
+  .dropdown-options {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vw;
+    max-width: 220px;
+    box-sizing: border-box;
+    z-index: 9999;
+  }
+}

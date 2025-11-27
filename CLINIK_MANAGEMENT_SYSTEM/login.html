@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login | CarePoint Clinic</title>
+
+  <!-- Font Awesome for Eye Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      background: linear-gradient(to right, #2e3c4b, #470747);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 30px;
+    }
+    .login-container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 35px 30px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.6s ease-out;
+      color: white;
+      text-align: center;
+    }
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      text-decoration: underline;
+    }
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 500;
+      text-align: left;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      color: #000;
+      margin-bottom: 10px;
+    }
+    .password-wrapper {
+      position: relative;
+      text-align: left;
+    }
+    .password-wrapper input {
+      padding-right: 40px;
+    }
+    .toggle-eye {
+      position: absolute;
+      top: 60%;
+      right: 12px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #444;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(to right, #2e3c4b85, #47074788);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: linear-gradient(to right, #2e3c4bb4, #470747b9);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .back-cross {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  z-index: 10;
+  transition: 0.3s ease;
+}
+
+.back-cross:hover {
+  color: #ffaaaa;
+}
+
+    #googleSignInBtn {
+      margin-top: 20px;
+      background: #db4437;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(219, 68, 55, 0.6);
+      transition: background 0.3s ease;
+    }
+    #googleSignInBtn:hover {
+      background: #c23321;
+      box-shadow: 0 6px 15px rgba(194, 51, 33, 0.8);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.95rem;
+      min-height: 22px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="login-form">
+      <span class="back-cross" onclick="window.location.href='index.html'">&times;</span>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required />
+
+      <div class="password-wrapper">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required />
+        <i class="fa-solid fa-eye-slash toggle-eye" id="togglePassword" title="Show/Hide Password"></i>
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <button id="googleSignInBtn">Sign in with Google</button>
+    <p id="message"></p>
+  </div>
+
+  <script type="module">
+    import { auth, db } from "./firebase-config.js";
+    import {
+      signInWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut,
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      doc,
+      getDoc,
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+
+    togglePassword.addEventListener("click", () => {
+      const isHidden = passwordInput.type === "password";
+      passwordInput.type = isHidden ? "text" : "password";
+      togglePassword.classList.remove("fa-eye", "fa-eye-slash");
+      togglePassword.classList.add(isHidden ? "fa-eye" : "fa-eye-slash");
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedRole = urlParams.get("role");
+
+    const loginForm = document.getElementById("login-form");
+    const message = document.getElementById("message");
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      message.textContent = "";
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password || !selectedRole) {
+        message.textContent = "❌ Please fill all fields and ensure role is in URL.";
+        message.style.color = "red";
+        return;
+      }
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+
+        if (!userDoc.exists()) throw new Error("User data not found");
+
+        const data = userDoc.data();
+        if (data.role !== selectedRole) throw new Error(`Role mismatch. You are registered as '${data.role}' not '${selectedRole}'`);
+
+        localStorage.setItem("userName", data.name);
+        localStorage.setItem("userEmail", user.email);
+        localStorage.setItem("userRole", data.role);
+
+        message.textContent = "✅ Login successful. Redirecting...";
+        message.style.color = "lightgreen";
+
+        setTimeout(() => {
+          window.location.href = selectedRole === "doctor" ? "doctor-dashboard.html" : "receptionist-dashboard.html";
+        }, 1500);
+      } catch (err) {
+        console.error(err);
+        message.textContent = "❌ " + err.message;
+        message.style.color = "red";
+      }
+    });
+
+    document.getElementById("googleSignInBtn").addEventListener("click", async () => {
+      if (!selectedRole) {
+        message.textContent = "❌ Role not specified in URL.";
+        message.style.color = "red";
+        return;
+      }
+      try {
+        const result = await signInWithPopup(auth, new GoogleAuthProvider());
+        const user = result.user;
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+
+        if (!userDoc.exists()) throw new Error("User data not found");
+
+        const data = userDoc.data();
+        if (data.role !== selectedRole) throw new Error(`Role mismatch. You are registered as '${data.role}' not '${selectedRole}'`);
+
+        localStorage.setItem("userName", data.name);
+        localStorage.setItem("userEmail", user.email);
+        localStorage.setItem("userRole", data.role);
+
+        message.textContent = "✅ Google login successful. Redirecting...";
+        message.style.color = "lightgreen";
+
+        setTimeout(() => {
+          window.location.href = selectedRole === "doctor" ? "doctor-dashboard.html" : "receptionist-dashboard.html";
+        }, 1500);
+      } catch (err) {
+        console.error(err);
+        message.textContent = "❌ " + err.message;
+        message.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>

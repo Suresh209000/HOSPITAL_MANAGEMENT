@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Select Role | CarePoint Clinic</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Header Branding with Buttons -->
+<header class="top-header">
+  <div class="logo">🏥 Suresh Hospital & Clinic </div>
+  <p class="tagline">Simple. Secure. Smart Healthcare.</p>
+</header>
+
+<div class="top-buttons">
+  <button id="about-btn">About</button>
+
+  <!-- Signup Dropdown -->
+  <div class="signup-dropdown">
+    <button class="signup-btn">Sign Up ▾</button>
+    <div class="dropdown-options">
+      <a href="signup.html?role=receptionist">Sign-Up as Receptionist</a>
+      <a href="signup.html?role=doctor">Sign-Up as Doctor</a>
+    </div>
+  </div>
+</div>
+
+  <!-- Welcome Section -->
+  <main class="main-content">
+    <h1 class="welcome-text">Welcome to CarePoint</h1>
+    <span class="sub-text">Please select your role to continue</span>
+
+    <div class="role-card">
+      <a href="login.html?role=receptionist" class="role-box">
+        <h2> Login as Receptionist</h2>
+        <p>Manage patient entries and tokens</p>
+      </a>
+
+      <a href="login.html?role=doctor" class="role-box">
+        <h2>Login as Doctor</h2>
+        <p>View patient details and prescribe</p>
+      </a>
+    </div>
+  </main>
+
+  <!-- About Modal (Hidden by Default) -->
+  <div id="about-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-modal">&times;</span>
+      <h2>About the Project</h2>
+      <p><strong>Project Created By:</strong> Mohit</p>
+      <p><strong>Project Title:</strong> Clinic Management System</p>
+      <p>This project is a secure, role-based healthcare management web application developed using HTML, CSS, JavaScript, and Firebase. It is designed to streamline clinical workflows by offering separate portals for receptionists and doctors.</p>
+      <p><strong>Features:</strong></p>
+      <ul>
+        <li><strong>Receptionist Role:</strong> Assign tokens, add new patient details, and manage queues.</li>
+        <li><strong>Doctor Role:</strong> View patient information and add prescriptions.</li>
+        <li>Secure login and signup using Firebase Authentication.</li>
+        <li>Real-time data storage and access via Firebase Firestore.</li>
+        <li>Session management with logout confirmation.</li>
+        <li>Responsive design for various devices.</li>
+      </ul>
+      <p><strong>How It Works:</strong></p>
+      <ul>
+        <li>Users select their role and either log in or sign up.</li>
+        <li>Receptionists enter patient data which is stored in Firestore.</li>
+        <li>Doctors can view these entries and update prescriptions.</li>
+        <li>The data is synchronized and protected via Firebase’s real-time capabilities and security rules.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 CarePoint Clinic | Designed by Mohit</p>
+  </footer>
+
+  <!-- Link External JS -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
